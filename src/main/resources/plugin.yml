@@ -1,0 +1,15 @@
+name: PowerSigns
+version: ${project.version}
+main: de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns
+api-version: 1.15
+prefix: PowerSigns
+softdepend: [Vault]
+authors: [dominoxp]
+
+permissions:
+  powersigns.sign.use:
+    default: true
+  powersigns.sign.create.self:
+    default: true
+  powersigns.sign.create.other:
+    default: true

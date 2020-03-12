@@ -1,0 +1,7 @@
+target
+.idea/misc.xml
+.idea/modules.xml
+.idea/sonarlint
+.idea/libraries
+.idea/uiDesigner.xml
+test_setup
