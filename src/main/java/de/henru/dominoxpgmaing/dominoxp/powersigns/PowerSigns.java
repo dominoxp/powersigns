@@ -1,5 +1,7 @@
 package de.henru.dominoxpgmaing.dominoxp.powersigns;
 
+import de.henru.dominoxpgmaing.dominoxp.powersigns.listener.BlockChangeListener;
+import de.henru.dominoxpgmaing.dominoxp.powersigns.listener.ConfirmMoneyTransaction;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.listener.InteractionListener;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.listener.SignChangeListener;
 import net.milkbowl.vault.chat.Chat;
@@ -35,10 +37,12 @@ public final class PowerSigns extends JavaPlugin {
         if(setupEconomy()){
             log.info("[" + LOG_TAG + "] Vault Economy Plugin Support enabled");
         }else{
-            log.info("[" + LOG_TAG + "] Vault Economy Plugin Support not available because VAULT Plugin (https://www.spigotmc.org/resources/vault.34315/) is missing");
+            log.info("[" + LOG_TAG + "] Vault Economy Plugin Support not available because VAULT Plugin (https://www.spigotmc.org/resources/vault.34315/) or a supporting economy plugin is missing");
+            onDisable();
         }
 
         setupPermissions();
+        getCommand("powersignacceptTransfer").setExecutor(new ConfirmMoneyTransaction());
         registerListeners();
 
     }
@@ -93,6 +97,7 @@ public final class PowerSigns extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new SignChangeListener(), this);
         pluginManager.registerEvents(new InteractionListener(), this);
+        pluginManager.registerEvents(new BlockChangeListener(), this);
     }
 
     public static Economy getEconomy(){

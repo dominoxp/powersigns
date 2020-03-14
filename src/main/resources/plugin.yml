@@ -3,7 +3,7 @@ version: ${project.version}
 main: de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns
 api-version: 1.15
 prefix: PowerSigns
-softdepend: [Vault]
+depend: [Vault]
 authors: [dominoxp]
 
 permissions:
@@ -13,3 +13,8 @@ permissions:
     default: true
   powersigns.sign.create.other:
     default: true
+
+commands:
+  powersignacceptTransfer:
+    description: Confirm Money Transactions by Power Signs
+    usage: /powersignacceptTransfer <world> <x> <y> <z>

@@ -1,10 +1,9 @@
 package de.henru.dominoxpgmaing.dominoxp.powersigns.listener;
 
-import de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns;
-import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.BlockUtils;
-import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.SignUtils;
-import net.milkbowl.vault.economy.Economy;
-import org.bukkit.block.Sign;
+import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.InvalidPowerSignException;
+import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.MoneyUtils;
+import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.PowerSign;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -22,38 +21,32 @@ public class InteractionListener implements Listener {
         if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
 
             //Check if given block is a sign
-            if(event.getClickedBlock() != null && SignUtils.isSignBlock(event.getClickedBlock())){
-                //Get sign data
-                Sign sign = (Sign) event.getClickedBlock().getState();
-                String[] lines = sign.getLines();
+            final PowerSign powerSign;
 
-                //Check if this is a powersign
-                if(SignUtils.checkLineBranding(lines[SignUtils.LINE_BRANDING])){
+            try {
+                 powerSign = new PowerSign(event.getClickedBlock());
+            }catch (InvalidPowerSignException e){
+                //The given block was not a power sign, ignore it
+                return;
+            }
 
-                    //TODO: Check before transaction if(BlockUtils.canPowerBlock(sign.getLocation()))
-                    //initiate transaction
+            //Check if we can activate a redstone signal
+            if(powerSign.canPowerBlock()){
 
-
-                    int money = SignUtils.getMoneyAmount(lines[SignUtils.LINE_MONEY]);
-                    Economy economy = PowerSigns.getEconomy();
-                    //TODO: Check async
-                    //TODO: Show confirmation on high amount
-                    /*if(economy.has(event.getPlayer(), money)){
-
-
-                    }*/
-
-                    if(BlockUtils.canPowerBlock(sign.getLocation())){
-                        BlockUtils.activateRedstoneSignal(sign.getLocation(),2);
-                    }else{
-                        //TODO:
+                //Check if this is the same player, active redstone and don't charge money
+                if(powerSign.isSamePlayerName(event.getPlayer())){
+                    powerSign.activateRedstoneSignal();
+                }else{
+                    OfflinePlayer moneyDestination = powerSign.getPlayer();
+                    if(moneyDestination == null){
+                        event.getPlayer().sendMessage(String.format("The Destination User %s could not be found!", powerSign.getUsername()));//TODO: Add to config
+                        return;
                     }
+                    float money = powerSign.getMoney();
 
-
+                    MoneyUtils.startMoneyTransaction(event.getPlayer(), moneyDestination, money, powerSign);
                 }
             }
         }
-
-
     }
 }

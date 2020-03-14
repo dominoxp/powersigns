@@ -1,7 +1,7 @@
 package de.henru.dominoxpgmaing.dominoxp.powersigns.listener;
 
-import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.BlockUtils;
-import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.SignUtils;
+import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.InvalidPowerSignException;
+import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.PowerSign;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,34 +26,24 @@ public class SignChangeListener implements Listener {
         Player player = event.getPlayer();
         String[] lines = event.getLines();
 
-        //The player receiving the money
-        OfflinePlayer targetedPlayer = null;
-        //The money amount to withdraw
-        int money;
-
-
-        if(!SignUtils.checkLineBranding(lines[SignUtils.LINE_BRANDING])){
-            return;
+        PowerSign powerSign;
+        try {
+            powerSign = new PowerSign(lines, event.getBlock().getLocation());
+        }catch (InvalidPowerSignException e){
+            //We don't care why the given block was not valid
+            throw new NullPointerException(e.getMessage());
+            //return;
         }
 
         //Check if we can place a redstone block on activation, if not cancel placement
-        if(!BlockUtils.canPowerBlock(event.getBlock().getLocation())){
-            //Inform layer about missing permissions
+        if(!powerSign.canPowerBlock()){
             player.sendMessage("Cannot Power this Block");//TODO: Add perm text
             event.setCancelled(true);
             return;
         }
 
-        //Check if line 2 contains the player name, if not get the corresponding player
-        if(!SignUtils.checkSamePlayerName(lines[SignUtils.LINE_OWNER], player)){
-            targetedPlayer = SignUtils.getPlayerBySignLine(lines[SignUtils.LINE_OWNER]);
-        }
-
-        //Check if this is the player creating the sign
-        if(targetedPlayer == null || player.getUniqueId() == targetedPlayer.getUniqueId()) {
-            targetedPlayer = player;
-            //Check permissions
-
+        //Check if the sign contains the player name, if not get the corresponding player
+        if(powerSign.isSamePlayerName(event.getPlayer())){
             if(!player.hasPermission(PERMISSION_SIGN_CREATE_SELF)){
                 //Inform layer about missing permissions
                 player.sendMessage("Missing Permissions");//TODO: Add perm text
@@ -67,15 +57,22 @@ public class SignChangeListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
+            //Update sign with current name if the given player could not be found
+            powerSign.setPlayer(event.getPlayer());
         }
 
-        //Get the money amount to withdraw
-        money = SignUtils.getMoneyAmount(lines[SignUtils.LINE_MONEY]);
+        //Check if the sign attached block can be powered
+        if(!powerSign.canPowerBlock()){
+            player.sendMessage("You cannot power this Block");//TODO: Add perm text
+            event.setCancelled(true);
+            return;
+        }
 
-        //Format the new Sign
-        event.setLine(SignUtils.LINE_BRANDING, "§4[PowerSign]");//TODO: Read from config
-        event.setLine(SignUtils.LINE_OWNER, targetedPlayer.getName());
-        //Line 2 will be ignored as there is only a description
-        event.setLine(SignUtils.LINE_MONEY, Integer.toString(money));
+        //Update the sign lines
+        int index = 0;
+        for(String line: powerSign.getFormattedLines()) {
+            event.setLine(index, line);
+            index += 1;
+        }
     }
 }
