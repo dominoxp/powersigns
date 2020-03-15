@@ -1,7 +1,7 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2020 Jan (dominoxp@henru.de).
  * All rights reserved.
- ******************************************************************************/
+ */
 
 package de.henru.dominoxpgmaing.dominoxp.powersigns.utils;
 
@@ -23,18 +23,31 @@ public class MoneyUtils {
         startMoneyTransaction(source, destination, amount, powerSign, true);
     }
 
-    public static void startMoneyTransaction(Player source, OfflinePlayer destination, float amount, PowerSign powerSign, boolean promtConfirm) {
+    /**
+     * Start a Money Transaction from source to destination player with money amount
+     * If the user should confirm the transaction (above limit) it is prompted to click on a text message
+     * Otherwise the money will be transferred to the other player and active the redstone signal
+     *
+     * @param source        The player paying money
+     * @param destination   The player receiving money
+     * @param amount        the mount of money
+     * @param powerSign     the sign being activated
+     * @param promptConfirm should the user confirm the message, if false the transaction is considered confirmed
+     */
+    public static void startMoneyTransaction(Player source, OfflinePlayer destination, float amount, PowerSign powerSign, boolean promptConfirm) {
         Runnable task = () -> {
             if (transferMoney(source, destination, amount)) {
+                //Activate the Redstone signal
                 Bukkit.getServer().getScheduler().runTask(PowerSigns.getInstance(), powerSign::activateRedstoneSignal);
             } else {
+                //Inform user of missing money
                 Economy economy = PowerSigns.getEconomy();
                 source.sendMessage(PowerSigns.getSettings().getErrorNotEnoughMoney((float) (amount - economy.getBalance(source))));
             }
         };
 
         //Check if the user should confirm the transaction
-        if (promtConfirm && shouldUserConfirm(amount)) {
+        if (promptConfirm && shouldUserConfirm(amount)) {
             source.sendMessage(
                     new ComponentBuilder(PowerSigns.getSettings().getMessageConfirmTransfer(amount, destination.getName()))
                             .append(PowerSigns.getSettings().getMessageConfirmTransferClickText())
@@ -48,6 +61,7 @@ public class MoneyUtils {
                             .create());
 
         } else {
+            //run the power sign task async to query money async
             Bukkit.getServer().getScheduler().runTaskAsynchronously(PowerSigns.getInstance(), task);
         }
     }

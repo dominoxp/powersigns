@@ -25,6 +25,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("&b[PowerSigns]&r")
     private String pluginChatPrefix = "&b[PowerSigns]&r";
+
+
     @Key("config.confirm_if_more_than")
     @Explanation({
             "The user should confirm the transaction while clicking on the sign at given money amount (int)"})
@@ -32,6 +34,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("10")
     private int configMoneyAmountConfirm = 10;
+
+
     @Key("config.powersign.valid_header")
     @Explanation({
             "The Sign Headers to recognise a powersign usually [ps] (not case sensitive)",
@@ -41,6 +45,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example({"[ps]", "[powersign]", "powersigns"})
     private List<String> configValidSignHeaders = Arrays.asList("[ps]", "[powersign]", "[powersigns]");
+
+
     @Key("config.powersign.replaced_header")
     @Explanation({
             "The Header used if the sign was recognized, you can use color codes here"})
@@ -48,6 +54,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("&4[PowerSigns] ")
     private String configSignHeaderResult = "&4[PowerSigns] ";
+
+
     @Key("config.powersign.currency")
     @Explanation({
             "The Currency Symbol used to visualise money amount on sign, could be blank"})
@@ -55,6 +63,8 @@ public class Settings {
     @IgnoreValue(ifNull = true)
     @Example("$")
     private String configCurrencySymbol = "$";
+
+
     //Permission related messages
     @Key("msg.perm.create_sign.self")
     @Explanation({
@@ -63,6 +73,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("You don't have the permission to create a PowerSign")
     private String permErrorCreateSignSelf = "You don't have the permission to create a PowerSign";
+
+
     @Key("msg.perm.create_sign.other")
     @Explanation({
             "Error Message if the user has not the permissions to create a PowerSign for other user",
@@ -71,6 +83,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("You don't have the permission to create a PowerSign for {player_name}")
     private String permErrorCreateSignOther = "You don't have the permission to create a PowerSign for {player_name}";
+
+
     @Key("msg.error.invalid_player_name")
     @Explanation({
             "Error Message if the user name on the powersign could not be found",
@@ -79,6 +93,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("The Destination User {player_name} could not be found!")
     private String errorDestinationUserNotFound = "The Destination User {player_name} could not be found!";
+
+
     @Key("msg.error.break_block_while_active")
     @Explanation({
             "Error Message if the user tries to break an active power sign"})
@@ -86,6 +102,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("This block cannot be broken while the powersign is active!")
     private String errorCannotBreakWhileBlocked = "This block cannot be broken while the powersign is active!";
+
+
     @Key("msg.error.transaction_not_enough_money")
     @Explanation({
             "Error Message if the user name has not (config.confirm_if_more_than)",
@@ -94,6 +112,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("You do not have enough money to activate this sign, you are missing {missing_money}")
     private String errorNotEnoughMoney = "You do not have enough money to activate this sign, you are missing {missing_money}";
+
+
     @Key("msg.info.confirm_transfer")
     @Explanation({
             "Inform the player if the confirm money amount was reached",
@@ -104,6 +124,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("Please confirm the money transfer of {money_amount} to {destination_player} ")
     private String messageConfirmTransfer = "Please confirm the money transfer of {money_amount} to {destination_player} ";
+
+
     @Key("msg.info.confirm_transfer_click")
     @Explanation({
             "The user should confirm the transaction by clicking on this text"})
@@ -111,6 +133,8 @@ public class Settings {
     @IgnoreValue(ifNull = true, ifEmptyString = true)
     @Example("&a[Click here]")
     private String messageConfirmTransferClickText = "&a[Click here]";
+
+
     //General error messages
     @Key("msg.error.invalid_attached_block")
     @Explanation({

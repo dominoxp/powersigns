@@ -263,10 +263,6 @@ public class PowerSign {
         return normalizeLine(username);
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public float getMoney() {
         return money;
     }
