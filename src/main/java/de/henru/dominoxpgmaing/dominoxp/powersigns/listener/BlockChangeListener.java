@@ -10,9 +10,9 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 
 public class BlockChangeListener implements Listener {
     @EventHandler
-    public void onBreak(BlockBreakEvent event){
+    public void onBreak(BlockBreakEvent event) {
         //Check if the block can be modified
-        if(BlockedBlocksMemory.getInstance().isLocationBlocked(event.getBlock().getLocation())){
+        if (BlockedBlocksMemory.getInstance().isLocationBlocked(event.getBlock().getLocation())) {
             event.setCancelled(true);
             //TODO: Add better event message
             event.getPlayer().sendMessage("This block cannot be breaked during signal!");
@@ -20,10 +20,10 @@ public class BlockChangeListener implements Listener {
     }
 
     @EventHandler
-    public void onPistonExtend(BlockPistonExtendEvent event){
-        for(Block block: event.getBlocks()){
+    public void onPistonExtend(BlockPistonExtendEvent event) {
+        for (Block block : event.getBlocks()) {
             //Check if the block can be modified
-            if(BlockedBlocksMemory.getInstance().isLocationBlocked(block.getLocation())){
+            if (BlockedBlocksMemory.getInstance().isLocationBlocked(block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }
@@ -31,10 +31,10 @@ public class BlockChangeListener implements Listener {
     }
 
     @EventHandler
-    public void onPistonRetract(BlockPistonRetractEvent event){
-        for(Block block: event.getBlocks()){
+    public void onPistonRetract(BlockPistonRetractEvent event) {
+        for (Block block : event.getBlocks()) {
             //Check if the block can be modified
-            if(BlockedBlocksMemory.getInstance().isLocationBlocked(block.getLocation())){
+            if (BlockedBlocksMemory.getInstance().isLocationBlocked(block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }

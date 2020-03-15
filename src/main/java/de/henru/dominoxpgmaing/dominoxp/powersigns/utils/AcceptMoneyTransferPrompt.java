@@ -17,30 +17,7 @@ public class AcceptMoneyTransferPrompt extends BooleanPrompt {
     private static final String KEY_AMOUNT = "amount";
     private static final String KEY_LISTENER = "listener";
 
-    @Override
-    protected Prompt acceptValidatedInput(ConversationContext context, boolean input) {
-        Runnable task = (Runnable) context.getSessionData(KEY_LISTENER);
-
-        if(input){
-            context.getForWhom().sendRawMessage("A");
-        }else{
-            context.getForWhom().sendRawMessage("B");
-        }
-
-
-        if(task!=null){
-            Bukkit.getServer().getScheduler().runTaskAsynchronously(PowerSigns.getInstance(), task);
-        }
-        return null;
-    }
-
-    @Override
-    public String getPromptText(ConversationContext context) {
-        return "Test String";
-    }
-
-
-    public static Map<Object, Object> generateConversationData(OfflinePlayer source, OfflinePlayer destination, float amount, Runnable transactionListener){
+    public static Map<Object, Object> generateConversationData(OfflinePlayer source, OfflinePlayer destination, float amount, Runnable transactionListener) {
         Map<Object, Object> output = new HashMap<>();
 
         output.put(KEY_SOURCE_USER, source);
@@ -49,5 +26,27 @@ public class AcceptMoneyTransferPrompt extends BooleanPrompt {
         output.put(KEY_LISTENER, transactionListener);
 
         return output;
+    }
+
+    @Override
+    protected Prompt acceptValidatedInput(ConversationContext context, boolean input) {
+        Runnable task = (Runnable) context.getSessionData(KEY_LISTENER);
+
+        if (input) {
+            context.getForWhom().sendRawMessage("A");
+        } else {
+            context.getForWhom().sendRawMessage("B");
+        }
+
+
+        if (task != null) {
+            Bukkit.getServer().getScheduler().runTaskAsynchronously(PowerSigns.getInstance(), task);
+        }
+        return null;
+    }
+
+    @Override
+    public String getPromptText(ConversationContext context) {
+        return "Test String";
     }
 }

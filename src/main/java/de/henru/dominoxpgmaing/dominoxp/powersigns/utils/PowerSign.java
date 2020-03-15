@@ -29,13 +29,13 @@ public class PowerSign {
     private float money;
     private Location location;
 
-    public PowerSign(String[] lines, Location location) throws InvalidPowerSignException{
+    public PowerSign(String[] lines, Location location) throws InvalidPowerSignException {
         //Check first line branding
-        if(!checkBranding(
+        if (!checkBranding(
                 normalizeLine(
                         lines[LINE_BRANDING]
                 )
-        )){
+        )) {
             throw new InvalidPowerSignException("The given sign header does not match [Powersign] or other specified in config");
         }
 
@@ -49,38 +49,50 @@ public class PowerSign {
         this.location = location;
     }
 
-    public PowerSign(Block block) throws InvalidPowerSignException{
+    public PowerSign(Block block) throws InvalidPowerSignException {
         this(getLinesFromBlock(block), block.getLocation());
     }
 
     /**
      * Get the text line of a minecraft sign, throw an exception if not a sign
+     *
      * @param block the block to get the text from
      * @return the lines on the sign
      * @throws InvalidPowerSignException if the given block is not a sign
      */
-    private static String[] getLinesFromBlock(Block block) throws InvalidPowerSignException{
+    private static String[] getLinesFromBlock(Block block) throws InvalidPowerSignException {
         BlockState blockState = block.getState();
-        if(blockState instanceof org.bukkit.block.Sign){
+        if (blockState instanceof org.bukkit.block.Sign) {
             org.bukkit.block.Sign sign = (org.bukkit.block.Sign) blockState;
             return sign.getLines();
-        }else{
+        } else {
             throw new InvalidPowerSignException("The given Block is not a Sign!");
         }
     }
 
     /**
+     * Normalize a sign line to be without color and leading spaces
+     *
+     * @param line the Line
+     * @return normalized line
+     */
+    private static String normalizeLine(String line) {
+        return ChatColor.stripColor(line).trim();
+    }
+
+    /**
      * Check if the given sign line matches the plugin keywords
+     *
      * @param line the line to check
      * @return true if the line matches a keyword defined in config.yml
      */
-    private boolean checkBranding(String line){
+    private boolean checkBranding(String line) {
         //TODO: Retreive Sign Headers from config files
-        String[] sign_headers = new String[]{"[PowerSign]","[PowerSigns]","[PS]"};
+        String[] sign_headers = new String[]{"[PowerSign]", "[PowerSigns]", "[PS]"};
 
         //Check if the first line equals the magic keyword (Default: [PowerSigns])
         for (String keyWord : sign_headers) {
-            if(line.equalsIgnoreCase(keyWord)){
+            if (line.equalsIgnoreCase(keyWord)) {
                 return true;
             }
         }
@@ -90,17 +102,18 @@ public class PowerSign {
 
     /**
      * Check if the given player name has played before
+     *
      * @return Offline Player if existing or null
      */
     @Nullable
-    public OfflinePlayer getPlayer(){
+    public OfflinePlayer getPlayer() {
         //TODO: Find a better solution with player name caching!
         //TODO: Seems to have problems
-        for(OfflinePlayer offlinePlayer: Bukkit.getOfflinePlayers()){
-            if(
-                    offlinePlayer.getName()!= null &&
+        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+            if (
+                    offlinePlayer.getName() != null &&
                             offlinePlayer.getName().equalsIgnoreCase(username)
-            ){
+            ) {
                 return offlinePlayer;
             }
         }
@@ -110,39 +123,42 @@ public class PowerSign {
 
     /**
      * Set the given player name as the owner player name
+     *
      * @param player the player to be set
      */
-    public void setPlayer(OfflinePlayer player){
+    public void setPlayer(OfflinePlayer player) {
         username = player.getName();
     }
 
     /**
      * Check if the given line contains the same player name
+     *
      * @param player the player creating the sign
      * @return true if name is matching
      */
-    public boolean isSamePlayerName(Player player){
+    public boolean isSamePlayerName(Player player) {
         return player.getName().equalsIgnoreCase(getUsername());
     }
 
     /**
      * Get the money amount of the sign created
+     *
      * @param line sign line
      * @return amount of money/int
      */
-    private float getMoneyAmount(String line){
+    private float getMoneyAmount(String line) {
         //Remove currency symbol
         line = line.replace(CURRENCY, "");
 
         //Try to parse a float first
         float amount;
-        try{
+        try {
             amount = Float.parseFloat(line);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             //Try to parse a integer
             try {
                 amount = Integer.parseInt(line);
-            }catch (NumberFormatException ee){
+            } catch (NumberFormatException ee) {
                 amount = 0;
             }
         }
@@ -152,29 +168,20 @@ public class PowerSign {
     }
 
     /**
-     * Normalize a sign line to be without color and leading spaces
-     * @param line the Line
-     * @return normalized line
-     */
-    private static String normalizeLine(String line){
-        return ChatColor.stripColor(line).trim();
-    }
-
-    /**
      * Create a redstone signal at the position where the sign is attached at for given delay in seconds
      */
-    public void activateRedstoneSignal(){
+    public void activateRedstoneSignal() {
         int delay = 1;
         Block attachedBlock = getAttachedBlock();
 
         //Check if attached block exists and the block was not locked by another click
         //Checking the sign would not prevent other signs to be clicked at same location
-        if(attachedBlock == null){
+        if (attachedBlock == null) {
             return;
         }
 
         //Check if given block can be replaced with redstone block
-        if(!canPowerBlock()){
+        if (!canPowerBlock()) {
             return;
         }
 
@@ -200,18 +207,19 @@ public class PowerSign {
 
     /**
      * Gets the block the sign is standing on or attached to
+     *
      * @return The block the sign is standing on or attached to
      */
     private Block getAttachedBlock() {
-        if(location.getWorld() != null) {
+        if (location.getWorld() != null) {
             Block block = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
             BlockData data = block.getBlockData();
 
             //Check if sign is mounted on wall, else use Block below
-            if(data instanceof Directional){
+            if (data instanceof Directional) {
                 Directional directional = (Directional) data;
                 return block.getRelative(directional.getFacing().getOppositeFace());
-            }else{
+            } else {
                 return block.getRelative(BlockFace.DOWN);
             }
         }
@@ -220,6 +228,7 @@ public class PowerSign {
 
     /**
      * Check if the attached block can safely replaced with a redstone block
+     *
      * @return true if block can be replaced
      */
     public boolean canPowerBlock() {
@@ -238,7 +247,7 @@ public class PowerSign {
         return !(attachedBlock.getState() instanceof InventoryHolder);
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return normalizeLine(username);
     }
 
@@ -254,7 +263,7 @@ public class PowerSign {
         return location;
     }
 
-    public String[] getFormattedLines(){
+    public String[] getFormattedLines() {
         String[] lines = new String[4];
 
         //Format the new Sign

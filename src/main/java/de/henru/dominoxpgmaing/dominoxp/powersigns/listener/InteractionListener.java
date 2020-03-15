@@ -13,28 +13,29 @@ public class InteractionListener implements Listener {
 
     /**
      * Handle a player block interaction event
+     *
      * @param event the event recurring
      */
     @EventHandler
-    public void onInteract(PlayerInteractEvent event){
+    public void onInteract(PlayerInteractEvent event) {
         //Handle Right Click Action
-        if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
             //Check if given block is a sign
             final PowerSign powerSign;
 
             try {
-                 powerSign = new PowerSign(event.getClickedBlock());
-            }catch (InvalidPowerSignException e){
+                powerSign = new PowerSign(event.getClickedBlock());
+            } catch (InvalidPowerSignException e) {
                 //The given block was not a power sign, ignore it
                 return;
             }
 
             //Check if we can activate a redstone signal
-            if(powerSign.canPowerBlock()){
+            if (powerSign.canPowerBlock()) {
 
                 //Check if this is the same player, active redstone and don't charge money
-                if(powerSign.isSamePlayerName(event.getPlayer())){
+                if (powerSign.isSamePlayerName(event.getPlayer())) {
                     powerSign.activateRedstoneSignal();
                 } else {
                     OfflinePlayer moneyDestination = powerSign.getPlayer();

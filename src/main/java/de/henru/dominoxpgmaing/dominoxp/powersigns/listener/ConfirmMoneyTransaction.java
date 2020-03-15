@@ -12,10 +12,10 @@ import org.bukkit.entity.Player;
 public class ConfirmMoneyTransaction implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(sender instanceof Player){
+        if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            if(args.length < 4){
+            if (args.length < 4) {
                 sender.sendMessage("Too few arguments provided");
             }
 
@@ -32,7 +32,7 @@ public class ConfirmMoneyTransaction implements CommandExecutor {
                 MoneyUtils.startMoneyTransaction(player, powerSign.getPlayer(), powerSign.getMoney(), powerSign, false);
                 return true;
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 sender.sendMessage("Invalid Coordinates: " + e);
             }
         }

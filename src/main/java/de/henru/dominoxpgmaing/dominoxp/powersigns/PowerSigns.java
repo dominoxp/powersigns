@@ -26,6 +26,18 @@ public final class PowerSigns extends JavaPlugin {
     private static Permission permissions;
     private static Chat chat;
 
+    public static Economy getEconomy() {
+        return economy;
+    }
+
+    public static Permission getPermissions() {
+        return permissions;
+    }
+
+    public static PowerSigns getInstance() {
+        return instance;
+    }
+
     /**
      * Callback when the plugin is enabled
      */
@@ -35,7 +47,7 @@ public final class PowerSigns extends JavaPlugin {
         // Plugin startup logic
         log.info("[" + LOG_TAG + "] Enabling Plugin " + getDescription().getName() + " version " + getDescription().getVersion());
 
-        if(setupEconomy()){
+        if (setupEconomy()) {
             log.info("[" + LOG_TAG + "] Vault Economy Plugin Support enabled");
         } else {
             log.info("[" + LOG_TAG + "] Vault Economy Plugin Support not available because VAULT Plugin (https://www.spigotmc.org/resources/vault.34315/) or a supporting economy plugin is missing");
@@ -61,16 +73,17 @@ public final class PowerSigns extends JavaPlugin {
 
     /**
      * Setup the connection to vault economy plugin
+     *
      * @return true if the connection was successfully
      */
-    private boolean setupEconomy(){
+    private boolean setupEconomy() {
         //Check if vault is available
-        if (getServer().getPluginManager().getPlugin(DEPENDENCY_VAULT) == null){
+        if (getServer().getPluginManager().getPlugin(DEPENDENCY_VAULT) == null) {
             return false;
         }
 
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null){
+        if (rsp == null) {
             return false;
         }
 
@@ -80,12 +93,13 @@ public final class PowerSigns extends JavaPlugin {
 
     /**
      * Setup Permissions Support
+     *
      * @return true if setup was successfully
      */
-    private boolean setupPermissions(){
+    private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
 
-        if(rsp == null){
+        if (rsp == null) {
             return false;
         }
 
@@ -96,23 +110,11 @@ public final class PowerSigns extends JavaPlugin {
     /**
      * Register all event listeners
      */
-    private void registerListeners(){
+    private void registerListeners() {
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new SignChangeListener(), this);
         pluginManager.registerEvents(new InteractionListener(), this);
         pluginManager.registerEvents(new BlockChangeListener(), this);
-    }
-
-    public static Economy getEconomy(){
-        return economy;
-    }
-
-    public static Permission getPermissions(){
-        return permissions;
-    }
-
-    public static PowerSigns getInstance(){
-        return instance;
     }
 
 }
