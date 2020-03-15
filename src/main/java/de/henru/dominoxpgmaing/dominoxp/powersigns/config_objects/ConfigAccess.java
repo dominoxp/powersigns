@@ -1,7 +1,7 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2020 Jan (dominoxp@henru.de).
  * All rights reserved.
- ******************************************************************************/
+ */
 
 package de.henru.dominoxpgmaing.dominoxp.powersigns.config_objects;
 
@@ -23,7 +23,12 @@ public class ConfigAccess {
     private File configFile;
     private Settings settings;
 
-
+    /**
+     * Initiate a config instance
+     *
+     * @param plugin the plugin accessing the configs
+     * @throws IOException if the config file cannot be read or written
+     */
     public ConfigAccess(Plugin plugin) throws IOException {
         //Check if default setting is present
         configFile = new File(plugin.getDataFolder(), CONFIG_POWERSIGNS_PATH);
@@ -53,12 +58,24 @@ public class ConfigAccess {
         }
     }
 
+    /**
+     * load the plugin configuration
+     *
+     * @throws InvalidValueException         a problem with the configuration file
+     * @throws IOException                   File access error
+     * @throws InvalidConfigurationException a problem with the configuration file
+     */
     public void loadConfig() throws InvalidValueException, IOException, InvalidConfigurationException {
         YamlConfiguration configuration = new YamlConfiguration();
         configuration.load(configFile);
         settings = ConfigHelper.readConfig(configuration, Settings.SCHEMA);
     }
 
+    /**
+     * Save the current configuration
+     *
+     * @throws IOException the file could not be written
+     */
     public void saveConfig() throws IOException {
         YamlConfiguration configuration1 = new YamlConfiguration();
         ConfigHelper.writeConfig(configuration1, Settings.SCHEMA, settings, ConfigHelper.newOptions().ignoreFalse().ignoreZero());

@@ -1,7 +1,7 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2020 Jan (dominoxp@henru.de).
  * All rights reserved.
- ******************************************************************************/
+ */
 
 package de.henru.dominoxpgmaing.dominoxp.powersigns.listener;
 
@@ -44,13 +44,17 @@ public class InteractionListener implements Listener {
                 if (powerSign.isSamePlayerName(event.getPlayer())) {
                     powerSign.activateRedstoneSignal();
                 } else {
+                    //get the player which received the money
                     OfflinePlayer moneyDestination = powerSign.getPlayer();
+
                     if (moneyDestination == null) {
+                        //Player was not found
                         event.getPlayer().sendMessage(PowerSigns.getSettings().getErrorDestinationUserNotFound(powerSign.getUsername()));
                         return;
                     }
-                    float money = powerSign.getMoney();
 
+                    //Start money transaction
+                    float money = powerSign.getMoney();
                     MoneyUtils.startMoneyTransaction(event.getPlayer(), moneyDestination, money, powerSign);
                 }
             } else {

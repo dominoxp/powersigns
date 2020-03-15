@@ -1,7 +1,7 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2020 Jan (dominoxp@henru.de).
  * All rights reserved.
- ******************************************************************************/
+ */
 
 package de.henru.dominoxpgmaing.dominoxp.powersigns;
 
@@ -28,7 +28,6 @@ public final class PowerSigns extends JavaPlugin {
     private static final Logger log = Logger.getLogger("minecraft");
 
     private static PowerSigns instance;
-
     private static Economy economy = null;
     private static ConfigAccess configAccess;
 
@@ -115,5 +114,4 @@ public final class PowerSigns extends JavaPlugin {
         pluginManager.registerEvents(new InteractionListener(), this);
         pluginManager.registerEvents(new BlockChangeListener(), this);
     }
-
 }
