@@ -1,7 +1,7 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2020 Jan (dominoxp@henru.de).
  * All rights reserved.
- ******************************************************************************/
+ */
 
 package de.henru.dominoxpgmaing.dominoxp.powersigns.utils;
 
@@ -14,6 +14,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
@@ -255,7 +256,7 @@ public class PowerSign {
         }
 
         //TODO: Check if the block has extra meta data like signs, will erase signs otherwise
-        return !(attachedBlock.getState() instanceof InventoryHolder);
+        return !(attachedBlock.getState() instanceof InventoryHolder || attachedBlock.getState() instanceof Sign);
     }
 
     public String getUsername() {
