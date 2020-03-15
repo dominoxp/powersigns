@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Jan (dominoxp@henru.de).
+ * All rights reserved.
+ ******************************************************************************/
+
 package de.henru.dominoxpgmaing.dominoxp.powersigns.utils;
 
 import de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns;
@@ -23,19 +28,16 @@ public class MoneyUtils {
             if (transferMoney(source, destination, amount)) {
                 Bukkit.getServer().getScheduler().runTask(PowerSigns.getInstance(), powerSign::activateRedstoneSignal);
             } else {
-                source.sendMessage("Du hast nicht genug geld");
+                Economy economy = PowerSigns.getEconomy();
+                source.sendMessage(PowerSigns.getSettings().getErrorNotEnoughMoney((float) (amount - economy.getBalance(source))));
             }
         };
 
         //Check if the user should confirm the transaction
         if (promtConfirm && shouldUserConfirm(amount)) {
             source.sendMessage(
-                    new ComponentBuilder("")
-                            .color(net.md_5.bungee.api.ChatColor.GREEN)
-                            .append("[PowerSigns]")
-                            .color(net.md_5.bungee.api.ChatColor.RESET)
-                            .append(String.format("Bestätige den Geldtransfer von %s%s zu %s ", amount, PowerSign.CURRENCY, destination.getName()))
-                            .append("[Hier Klicken]")
+                    new ComponentBuilder(PowerSigns.getSettings().getMessageConfirmTransfer(amount, destination.getName()))
+                            .append(PowerSigns.getSettings().getMessageConfirmTransferClickText())
                             .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format(
                                     "/powersignacceptTransfer %s %s %s %s",
                                     powerSign.getLocation().getWorld().getName(),
@@ -57,7 +59,7 @@ public class MoneyUtils {
      * @return true if a confirmation is required
      */
     public static boolean shouldUserConfirm(float amount) {
-        return amount > 100;//TODO: use config
+        return amount > PowerSigns.getSettings().getConfigMoneyAmountConfirm();
     }
 
     /**

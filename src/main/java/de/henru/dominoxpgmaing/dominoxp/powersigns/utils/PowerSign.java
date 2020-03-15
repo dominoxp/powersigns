@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Jan (dominoxp@henru.de).
+ * All rights reserved.
+ ******************************************************************************/
+
 package de.henru.dominoxpgmaing.dominoxp.powersigns.utils;
 
 import de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns;
@@ -21,8 +26,6 @@ public class PowerSign {
     public static final int LINE_OWNER = 1;
     public static final int LINE_DESCRIPTION = 2;
     public static final int LINE_MONEY = 3;
-
-    public static final String CURRENCY = "$";
 
     private String username;
     private String description;
@@ -87,11 +90,8 @@ public class PowerSign {
      * @return true if the line matches a keyword defined in config.yml
      */
     private boolean checkBranding(String line) {
-        //TODO: Retreive Sign Headers from config files
-        String[] sign_headers = new String[]{"[PowerSign]", "[PowerSigns]", "[PS]"};
-
         //Check if the first line equals the magic keyword (Default: [PowerSigns])
-        for (String keyWord : sign_headers) {
+        for (String keyWord : PowerSigns.getSettings().getConfigValidSignHeaders()) {
             if (line.equalsIgnoreCase(keyWord)) {
                 return true;
             }
@@ -108,7 +108,6 @@ public class PowerSign {
     @Nullable
     public OfflinePlayer getPlayer() {
         //TODO: Find a better solution with player name caching!
-        //TODO: Seems to have problems
         for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
             if (
                     offlinePlayer.getName() != null &&
@@ -148,7 +147,7 @@ public class PowerSign {
      */
     private float getMoneyAmount(String line) {
         //Remove currency symbol
-        line = line.replace(CURRENCY, "");
+        line = line.replace(PowerSigns.getSettings().getConfigCurrencySymbol(), "");
 
         //Try to parse a float first
         float amount;
@@ -279,10 +278,10 @@ public class PowerSign {
         String[] lines = new String[4];
 
         //Format the new Sign
-        lines[LINE_BRANDING] = "§4[PowerSign]";//TODO: Read from config
+        lines[LINE_BRANDING] = PowerSigns.getSettings().getConfigSignHeaderResult();
         lines[LINE_OWNER] = username;
         lines[LINE_DESCRIPTION] = description;
-        lines[LINE_MONEY] = String.format("%s%s", money, CURRENCY);
+        lines[LINE_MONEY] = String.format("%s%s", money, PowerSigns.getSettings().getConfigCurrencySymbol());
 
         return lines;
     }

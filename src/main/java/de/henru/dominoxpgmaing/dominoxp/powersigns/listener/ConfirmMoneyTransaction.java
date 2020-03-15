@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Jan (dominoxp@henru.de).
+ * All rights reserved.
+ ******************************************************************************/
+
 package de.henru.dominoxpgmaing.dominoxp.powersigns.listener;
 
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.MoneyUtils;
@@ -8,10 +13,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class ConfirmMoneyTransaction implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 

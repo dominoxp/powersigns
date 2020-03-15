@@ -1,5 +1,11 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Jan (dominoxp@henru.de).
+ * All rights reserved.
+ ******************************************************************************/
+
 package de.henru.dominoxpgmaing.dominoxp.powersigns.listener;
 
+import de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.BlockedBlocksMemory;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -14,8 +20,7 @@ public class BlockChangeListener implements Listener {
         //Check if the block can be modified
         if (BlockedBlocksMemory.getInstance().isLocationBlocked(event.getBlock().getLocation())) {
             event.setCancelled(true);
-            //TODO: Add better event message
-            event.getPlayer().sendMessage("This block cannot be breaked during signal!");
+            event.getPlayer().sendMessage(PowerSigns.getSettings().getErrorCannotBreakWhileBlocked());
         }
     }
 

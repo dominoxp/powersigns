@@ -1,5 +1,11 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Jan (dominoxp@henru.de).
+ * All rights reserved.
+ ******************************************************************************/
+
 package de.henru.dominoxpgmaing.dominoxp.powersigns.config_objects;
 
+import dev.anhcraft.configdoc.ConfigDocGenerator;
 import dev.anhcraft.confighelper.ConfigHelper;
 import dev.anhcraft.confighelper.exception.InvalidValueException;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -12,6 +18,7 @@ import java.util.logging.Logger;
 
 public class ConfigAccess {
     private static final String CONFIG_POWERSIGNS_PATH = "powersigns.yml";
+    private static final String CONFIG_POWERSIGNS_DOCS_PATH = "docs";
 
     private File configFile;
     private Settings settings;
@@ -23,10 +30,15 @@ public class ConfigAccess {
 
         //Create parent folders
         if (!configFile.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             configFile.getParentFile().mkdirs();
+
             //Save default config
             settings = new Settings();
             saveConfig();
+
+            //Generate settings docs
+            new ConfigDocGenerator().withSchema(Settings.SCHEMA).generate(new File(plugin.getDataFolder(), CONFIG_POWERSIGNS_DOCS_PATH));
         }
 
         //Try to load settings

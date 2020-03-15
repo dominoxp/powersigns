@@ -1,5 +1,11 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Jan (dominoxp@henru.de).
+ * All rights reserved.
+ ******************************************************************************/
+
 package de.henru.dominoxpgmaing.dominoxp.powersigns.listener;
 
+import de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.InvalidPowerSignException;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.MoneyUtils;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.PowerSign;
@@ -40,7 +46,7 @@ public class InteractionListener implements Listener {
                 } else {
                     OfflinePlayer moneyDestination = powerSign.getPlayer();
                     if (moneyDestination == null) {
-                        event.getPlayer().sendMessage(String.format("The Destination User %s could not be found!", powerSign.getUsername()));//TODO: Add to config
+                        event.getPlayer().sendMessage(PowerSigns.getSettings().getErrorDestinationUserNotFound(powerSign.getUsername()));
                         return;
                     }
                     float money = powerSign.getMoney();

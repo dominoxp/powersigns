@@ -1,8 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Jan (dominoxp@henru.de).
+ * All rights reserved.
+ ******************************************************************************/
+
 package de.henru.dominoxpgmaing.dominoxp.powersigns.listener;
 
 import de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.InvalidPowerSignException;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.PowerSign;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,7 +43,7 @@ public class SignChangeListener implements Listener {
 
         //Check if we can place a redstone block on activation, if not cancel placement
         if (!powerSign.canPowerBlock()) {
-            player.sendMessage(PowerSigns.getSettings().getErrorInvalidAttachedBlock().replace("{block_name}", powerSign.getAttachedBlockName()));
+            player.sendMessage(PowerSigns.getSettings().getErrorInvalidAttachedBlock(powerSign.getAttachedBlockName()));
             event.setCancelled(true);
             return;
         }
@@ -45,29 +51,26 @@ public class SignChangeListener implements Listener {
         //Check if the sign contains the player name, if not get the corresponding player
         if (powerSign.isSamePlayerName(event.getPlayer())) {
             if (!player.hasPermission(PERMISSION_SIGN_CREATE_SELF)) {
-                //Inform layer about missing permissions
+                //Inform player about missing permissions
                 player.sendMessage(PowerSigns.getSettings().getPermErrorCreateSignSelf());
                 event.setCancelled(true);
                 return;
             }
         } else {
-            if (!player.hasPermission(PERMISSION_SIGN_CREATE_OTHER)) {
-                //Inform layer about missing permissions
-                player.sendMessage("Missing Permissions");//TODO: Add perm text
-                event.setCancelled(true);
-                return;
-            }
             //Update sign with current name if the given player could not be found
-            if (powerSign.getPlayer() == null) {
-                powerSign.setPlayer(event.getPlayer());
-            }
-        }
+            OfflinePlayer targedPlayer = powerSign.getPlayer();
 
-        //Check if the sign attached block can be powered
-        if (!powerSign.canPowerBlock()) {
-            player.sendMessage("You cannot power this Block");//TODO: Add perm text
-            event.setCancelled(true);
-            return;
+            if (targedPlayer == null) {
+                powerSign.setPlayer(event.getPlayer());
+            } else {
+                if (!player.hasPermission(PERMISSION_SIGN_CREATE_OTHER)) {
+                    //Inform player about missing permissions
+                    player.sendMessage(PowerSigns.getSettings().getPermErrorCreateSignOther(powerSign.getUsername()));
+
+                    event.setCancelled(true);
+                    return;
+                }
+            }
         }
 
         //Update the sign lines

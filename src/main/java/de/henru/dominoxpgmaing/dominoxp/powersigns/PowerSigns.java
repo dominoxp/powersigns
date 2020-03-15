@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2020 Jan (dominoxp@henru.de).
+ * All rights reserved.
+ ******************************************************************************/
+
 package de.henru.dominoxpgmaing.dominoxp.powersigns;
 
 import de.henru.dominoxpgmaing.dominoxp.powersigns.config_objects.ConfigAccess;
@@ -14,6 +19,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public final class PowerSigns extends JavaPlugin {
@@ -63,7 +69,7 @@ public final class PowerSigns extends JavaPlugin {
             return;
         }
 
-        getCommand("powersignacceptTransfer").setExecutor(new ConfirmMoneyTransaction());
+        Objects.requireNonNull(getCommand("powersignacceptTransfer")).setExecutor(new ConfirmMoneyTransaction());
         registerListeners();
 
         //Initiate an instance of blocked blocks storage/memory
@@ -97,7 +103,7 @@ public final class PowerSigns extends JavaPlugin {
         }
 
         economy = rsp.getProvider();
-        return economy != null;
+        return true;
     }
 
     /**
