@@ -95,6 +95,7 @@ public class PowerSign {
     @Nullable
     public OfflinePlayer getPlayer(){
         //TODO: Find a better solution with player name caching!
+        //TODO: Seems to have problems
         for(OfflinePlayer offlinePlayer: Bukkit.getOfflinePlayers()){
             if(
                     offlinePlayer.getName()!= null &&
@@ -221,15 +222,20 @@ public class PowerSign {
      * Check if the attached block can safely replaced with a redstone block
      * @return true if block can be replaced
      */
-    public boolean canPowerBlock(){
-        //Check if the block is currently powered by redstone
-        if(BlockedBlocksMemory.getInstance().isLocationBlocked(getLocation())){
+    public boolean canPowerBlock() {
+        Block attachedBlock = getAttachedBlock();
+
+        if (attachedBlock == null) {
             return false;
         }
 
-        Block attachedBlock = getAttachedBlock();
+        //Check if the block is currently powered by redstone
+        if (BlockedBlocksMemory.getInstance().isLocationBlocked(attachedBlock.getLocation())) {
+            return false;
+        }
+
         //TODO: Check if the block has extra meta data like signs, will erase signs otherwise
-        return !(attachedBlock == null || attachedBlock.getState() instanceof InventoryHolder);
+        return !(attachedBlock.getState() instanceof InventoryHolder);
     }
 
     public String getUsername(){

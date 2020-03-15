@@ -1,7 +1,10 @@
 package de.henru.dominoxpgmaing.dominoxp.powersigns.utils;
 
 import org.bukkit.Location;
-import java.util.concurrent.ConcurrentLinkedQueue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This class holds a list of all blocks being blocked temporary for modification by powersign
@@ -12,11 +15,11 @@ public class BlockedBlocksMemory {
     private static BlockedBlocksMemory instance;
 
     //List of all blocks being blocked
-    private ConcurrentLinkedQueue<Location> blockedLocations;
+    private List<Location> blockedLocations;
 
     //Private Constructor
     private BlockedBlocksMemory(){
-        blockedLocations = new ConcurrentLinkedQueue<>();
+        blockedLocations = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**

@@ -4,6 +4,7 @@ import de.henru.dominoxpgmaing.dominoxp.powersigns.listener.BlockChangeListener;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.listener.ConfirmMoneyTransaction;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.listener.InteractionListener;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.listener.SignChangeListener;
+import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.BlockedBlocksMemory;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -36,7 +37,7 @@ public final class PowerSigns extends JavaPlugin {
 
         if(setupEconomy()){
             log.info("[" + LOG_TAG + "] Vault Economy Plugin Support enabled");
-        }else{
+        } else {
             log.info("[" + LOG_TAG + "] Vault Economy Plugin Support not available because VAULT Plugin (https://www.spigotmc.org/resources/vault.34315/) or a supporting economy plugin is missing");
             onDisable();
         }
@@ -45,6 +46,8 @@ public final class PowerSigns extends JavaPlugin {
         getCommand("powersignacceptTransfer").setExecutor(new ConfirmMoneyTransaction());
         registerListeners();
 
+        //Initiate an instance of blocked blocks storage/memory
+        BlockedBlocksMemory.getInstance();
     }
 
     /**

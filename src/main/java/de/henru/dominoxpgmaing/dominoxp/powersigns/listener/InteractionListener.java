@@ -36,9 +36,9 @@ public class InteractionListener implements Listener {
                 //Check if this is the same player, active redstone and don't charge money
                 if(powerSign.isSamePlayerName(event.getPlayer())){
                     powerSign.activateRedstoneSignal();
-                }else{
+                } else {
                     OfflinePlayer moneyDestination = powerSign.getPlayer();
-                    if(moneyDestination == null){
+                    if (moneyDestination == null) {
                         event.getPlayer().sendMessage(String.format("The Destination User %s could not be found!", powerSign.getUsername()));//TODO: Add to config
                         return;
                     }
@@ -46,6 +46,8 @@ public class InteractionListener implements Listener {
 
                     MoneyUtils.startMoneyTransaction(event.getPlayer(), moneyDestination, money, powerSign);
                 }
+            } else {
+                event.setCancelled(true);
             }
         }
     }
