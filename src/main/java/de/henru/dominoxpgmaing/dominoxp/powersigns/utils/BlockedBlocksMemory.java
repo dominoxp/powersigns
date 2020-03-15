@@ -61,4 +61,11 @@ public class BlockedBlocksMemory {
     public void unblockLocation(Location location) {
         blockedLocations.remove(location);
     }
+
+    /**
+     * Remove own instance to free up memory
+     */
+    public void destroy() {
+        instance = null;
+    }
 }

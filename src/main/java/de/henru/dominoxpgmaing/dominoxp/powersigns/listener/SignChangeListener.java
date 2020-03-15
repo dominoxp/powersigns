@@ -1,5 +1,6 @@
 package de.henru.dominoxpgmaing.dominoxp.powersigns.listener;
 
+import de.henru.dominoxpgmaing.dominoxp.powersigns.PowerSigns;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.InvalidPowerSignException;
 import de.henru.dominoxpgmaing.dominoxp.powersigns.utils.PowerSign;
 import org.bukkit.entity.Player;
@@ -31,13 +32,12 @@ public class SignChangeListener implements Listener {
             powerSign = new PowerSign(lines, event.getBlock().getLocation());
         } catch (InvalidPowerSignException e) {
             //We don't care why the given block was not valid
-            throw new NullPointerException(e.getMessage());
-            //return;
+            return;
         }
 
         //Check if we can place a redstone block on activation, if not cancel placement
         if (!powerSign.canPowerBlock()) {
-            player.sendMessage("Cannot Power this Block");//TODO: Add perm text
+            player.sendMessage(PowerSigns.getSettings().getErrorInvalidAttachedBlock().replace("{block_name}", powerSign.getAttachedBlockName()));
             event.setCancelled(true);
             return;
         }
@@ -46,7 +46,7 @@ public class SignChangeListener implements Listener {
         if (powerSign.isSamePlayerName(event.getPlayer())) {
             if (!player.hasPermission(PERMISSION_SIGN_CREATE_SELF)) {
                 //Inform layer about missing permissions
-                player.sendMessage("Missing Permissions");//TODO: Add perm text
+                player.sendMessage(PowerSigns.getSettings().getPermErrorCreateSignSelf());
                 event.setCancelled(true);
                 return;
             }
@@ -58,7 +58,9 @@ public class SignChangeListener implements Listener {
                 return;
             }
             //Update sign with current name if the given player could not be found
-            powerSign.setPlayer(event.getPlayer());
+            if (powerSign.getPlayer() == null) {
+                powerSign.setPlayer(event.getPlayer());
+            }
         }
 
         //Check if the sign attached block can be powered

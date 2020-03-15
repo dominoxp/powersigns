@@ -66,6 +66,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>dev.anhcraft</id>
+            <url>https://repo.anhcraft.dev/repository/mvn/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -80,6 +84,11 @@
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.anhcraft</groupId>
+            <artifactId>confighelper.bukkit</artifactId>
+            <version>1.0.5</version>
         </dependency>
     </dependencies>
 </project>

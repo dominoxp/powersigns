@@ -201,8 +201,6 @@ public class PowerSign {
             attachedBlock.setBlockData(data);
             BlockedBlocksMemory.getInstance().unblockLocation(attachedBlock.getLocation());
         }, ticks);
-
-        return;
     }
 
     /**
@@ -224,6 +222,20 @@ public class PowerSign {
             }
         }
         return null;
+    }
+
+    /**
+     * Get a userfriendly block name of the attached block
+     *
+     * @return the name of the attached block
+     */
+    public String getAttachedBlockName() {
+        Block block = getAttachedBlock();
+        if (block == null) {
+            return "Air";
+        } else {
+            return block.getType().name();
+        }
     }
 
     /**
